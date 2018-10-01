@@ -1,0 +1,16 @@
+target
+nbproject
+nbactions.xml
+nb-configuration.xml
+*/.project
+*/.pydevproject
+*/.settings/
+.classpath
+.idea/
+*.iml
+*.ipr
+*.iml
+*.iws
+*.pyc
+*.egg-info/
+
