@@ -15,6 +15,7 @@
     <modules>
         <module>checks</module>
         <module>example</module>
+        <module>config-plugin</module>
     </modules>
 
     <properties>

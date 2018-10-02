@@ -22,9 +22,14 @@
                         <version>8.12</version>
                     </dependency>
                     <dependency>
-                        <groupId>ru.hh</groupId>
+                        <groupId>${project.groupId}</groupId>
                         <artifactId>checks</artifactId>
-                        <version>1.2-SNAPSHOT</version>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>config-plugin</artifactId>
+                        <version>${project.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -36,7 +41,8 @@
                             <sourceDirectories>
                                 <sourceDirectory>${basedir}/src</sourceDirectory>
                             </sourceDirectories>
-                            <configLocation>../checkstyle.xml</configLocation>
+                            <!-- or use url like https://github.com/hhru/checkstyle/raw/checkstyle-1.1/checkstyle.xml here -->
+                            <configLocation>checkstyle.xml</configLocation>
                             <encoding>UTF-8</encoding>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         </configuration>
