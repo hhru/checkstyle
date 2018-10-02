@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>config-plugin</artifactId>
+    <artifactId>checkstyle-config-plugin</artifactId>
 
 
 </project>

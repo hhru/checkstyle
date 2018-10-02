@@ -28,7 +28,7 @@
                     </dependency>
                     <dependency>
                         <groupId>${project.groupId}</groupId>
-                        <artifactId>config-plugin</artifactId>
+                        <artifactId>checkstyle-config-plugin</artifactId>
                         <version>${project.version}</version>
                     </dependency>
                 </dependencies>
