@@ -3,7 +3,6 @@ package ru.hh.checkstyle.maven.build;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
@@ -61,22 +60,33 @@ public class CheckstyleViolationCheckMojo extends org.apache.maven.plugins.check
       if (!"sun_checks.xml".equals(configLocation)) {
         hhConfigs.add(resolveResource(configLocation));
       }
-      List<Node> elements = new ArrayList<>(hhConfigs.size());
-      for (Path hhConfig : hhConfigs) {
-        elements.add(ConfigMergeProcessor.handleFile(this::resolveResource, builder, hhConfig, getLog()));
+      if (hhConfigs.isEmpty()) {
+        throw new MojoFailureException("Please, provide configuration file/-s");
       }
-      Node result = elements.get(0);
-      for (int i = 1; i < elements.size(); i++) {
-        result = ConfigMergeProcessor.merge(result, elements.get(i));
-      }
+      List<Node> elements = resolveToElements(hhConfigs);
+      Node result = mergeElements(elements);
       File resultFile = outputDirectory.toPath().resolve(hhCheckStyleCompilationResult).toFile();
       ConfigMergeProcessor.writeNodeToFile(builder, result, resultFile);
       ReflectionUtils.setVariableValueInObject(this, "configLocation", hhCheckStyleCompilationResult);
       super.execute();
-    } catch (IORuntimeException | IOException | SAXException | IllegalAccessException | ParserConfigurationException | TransformerException e) {
+    } catch (ExpectedExceptionRuntimeWrapper | IllegalAccessException | ParserConfigurationException | TransformerException e) {
       throw new MojoExecutionException("Exception on checkstyle check", e);
     }
 
+  }
+
+  private static Node mergeElements(List<Node> elements) {
+    return elements.stream().skip(1).reduce(elements.get(0), ConfigMergeProcessor::merge);
+  }
+
+  private List<Node> resolveToElements(List<Path> hhConfigs) {
+    return hhConfigs.stream().map(hhConfig -> {
+      try {
+        return ConfigMergeProcessor.handleFile(this::resolveResource, builder, hhConfig, getLog());
+      } catch (IOException | SAXException | ParserConfigurationException e) {
+        throw new ExpectedExceptionRuntimeWrapper(e);
+      }
+    }).collect(Collectors.toList());
   }
 
   private void configureResourceLocator(ResourceManager resourceManager) throws IllegalAccessException {
@@ -97,7 +107,7 @@ public class CheckstyleViolationCheckMojo extends org.apache.maven.plugins.check
     try {
       return locator.getResourceAsFile(cfgLocation).toPath();
     } catch (ResourceNotFoundException | FileResourceCreationException e) {
-      throw new IORuntimeException(e);
+      throw new ExpectedExceptionRuntimeWrapper(e);
     }
   }
 

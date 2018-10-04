@@ -93,7 +93,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>checkstyle-import-maven-plugin</artifactId>
+            <artifactId>checkstyle-config-compilation-maven-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

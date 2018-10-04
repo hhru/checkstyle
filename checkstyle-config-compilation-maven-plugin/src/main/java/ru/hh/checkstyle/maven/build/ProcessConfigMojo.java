@@ -60,10 +60,10 @@ public class ProcessConfigMojo extends AbstractMojo {
             getLog().info("relative file path: " + relativeFilePath);
             ConfigMergeProcessor.writeNodeToFile(builder, result, outputDirectory.toPath().resolve(relativeFilePath).toFile());
           } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
-            throw new IORuntimeException(e);
+            throw new ExpectedExceptionRuntimeWrapper(e);
           }
         });
-    } catch (IOException | IORuntimeException e) {
+    } catch (IOException | ExpectedExceptionRuntimeWrapper e) {
       throw new MojoExecutionException("failed to process resources", e);
     }
   }

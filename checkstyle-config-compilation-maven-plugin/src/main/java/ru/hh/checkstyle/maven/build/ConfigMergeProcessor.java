@@ -128,6 +128,7 @@ public final class ConfigMergeProcessor {
         }
       }
     }
+    clearIndentation(up);
     if (up.hasChildNodes()) {
       NodeList upChildNodes = up.getChildNodes();
       NodeList baseChildNodes = base.getChildNodes();
