@@ -3,7 +3,6 @@ package ru.hh.checkstyle.maven.build;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,9 +95,6 @@ public class CheckstyleViolationCheckMojo extends org.apache.maven.plugins.check
 
   private Path resolveResource(String cfgLocation) {
     try {
-//      if (cfgLocation.contains("..")) {
-//        throw new IORuntimeException(new IllegalArgumentException("file hierarchy is not supported"));
-//      }
       return locator.getResourceAsFile(cfgLocation).toPath();
     } catch (ResourceNotFoundException | FileResourceCreationException e) {
       throw new IORuntimeException(e);

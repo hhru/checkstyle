@@ -49,7 +49,6 @@ public class ProcessConfigMojo extends AbstractMojo {
   }
 
   private void processResource(Resource resource) throws MojoExecutionException {
-
     try {
       Path resourcePath = Paths.get(resource.getDirectory());
       Files.walk(resourcePath)

@@ -70,6 +70,7 @@
             <version>1.1.0</version>
         </dependency>
 
+        <!--maybe use this when the fix with recursive structures will be ready-->
         <!--<dependency>-->
             <!--<groupId>org.atteo</groupId>-->
             <!--<artifactId>xml-combiner</artifactId>-->
