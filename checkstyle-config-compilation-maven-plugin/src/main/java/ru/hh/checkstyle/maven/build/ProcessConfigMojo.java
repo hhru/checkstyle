@@ -57,7 +57,7 @@ public class ProcessConfigMojo extends AbstractMojo {
           try {
             Node result = ConfigMergeProcessor.handleFile(builder, file, getLog());
             Path relativeFilePath = resourcePath.relativize(file);
-            getLog().error("relative file path: " + relativeFilePath);
+            getLog().info("relative file path: " + relativeFilePath);
             ConfigMergeProcessor.writeNodeToFile(builder, result, outputDirectory.toPath().resolve(relativeFilePath).toFile());
           } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
             throw new IORuntimeException(e);
