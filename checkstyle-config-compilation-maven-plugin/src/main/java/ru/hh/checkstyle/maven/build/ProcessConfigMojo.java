@@ -25,13 +25,13 @@ import org.xml.sax.SAXException;
 @Mojo(name = "compile-config",
   defaultPhase = LifecyclePhase.PROCESS_RESOURCES)
 public class ProcessConfigMojo extends AbstractMojo {
-  @Parameter( defaultValue = "${project.build.outputDirectory}", required = true )
+  @Parameter(defaultValue = "${project.build.outputDirectory}", required = true)
   private File outputDirectory;
 
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
 
-  @Requirement( hint = "default" )
+  @Requirement(hint = "default")
   private ResourceManager locator;
 
   private final DocumentBuilder builder;

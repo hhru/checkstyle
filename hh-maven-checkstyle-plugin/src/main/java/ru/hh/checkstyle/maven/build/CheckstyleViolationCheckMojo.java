@@ -25,17 +25,16 @@ import org.codehaus.plexus.util.ReflectionUtils;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-@Mojo( name = "check", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST)
+@Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST)
 public class CheckstyleViolationCheckMojo extends org.apache.maven.plugins.checkstyle.CheckstyleViolationCheckMojo {
 
-  @Parameter( property = "hh.checkstyle.component.config.location", required = true)
+  @Parameter(property = "hh.checkstyle.component.config.location", required = true)
   private List<String> hhCheckStyleConfig;
 
-  @Parameter( property = "hh.checkstyle.result.config.location",
-    defaultValue = "hh-checkstyle-checker.xml", required = true)
+  @Parameter(property = "hh.checkstyle.result.config.location", defaultValue = "hh-checkstyle-checker.xml", required = true)
   private String hhCheckStyleCompilationResult;
 
-  @Parameter( defaultValue = "${project.build.directory}", required = true )
+  @Parameter(defaultValue = "${project.build.directory}", required = true)
   private File outputDirectory;
 
   @Component

@@ -33,6 +33,30 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>hh-maven-checkstyle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <failOnViolation>true</failOnViolation>
+                            <sourceDirectories>
+                                <sourceDirectory>${basedir}/src/main</sourceDirectory>
+                            </sourceDirectories>
+                            <hhCheckStyleConfig>
+                                <cfg>shared-checkstyle.xml</cfg>
+                            </hhCheckStyleConfig>
+                            <encoding>UTF-8</encoding>
+                            <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>

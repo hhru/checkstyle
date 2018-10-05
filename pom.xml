@@ -34,8 +34,34 @@
         </dependencies>
     </dependencyManagement>
 
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>hh-maven-checkstyle-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <failOnViolation>true</failOnViolation>
+                            <sourceDirectories>
+                                <sourceDirectory>${basedir}/src</sourceDirectory>
+                            </sourceDirectories>
+                            <hhCheckStyleConfig>
+                                <cfg>shared-checkstyle.xml</cfg>
+                            </hhCheckStyleConfig>
+                            <encoding>UTF-8</encoding>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
