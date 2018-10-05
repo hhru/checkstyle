@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>checkstyle</artifactId>
-        <groupId>ru.hh</groupId>
+        <groupId>ru.hh.checkstyle</groupId>
+        <artifactId>parent</artifactId>
         <version>1.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -12,37 +12,24 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.12</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>checks</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>checkstyle-config-plugin</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                </dependencies>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>hh-maven-checkstyle-plugin</artifactId>
+                <version>${project.version}</version>
                 <executions>
                     <execution>
                         <id>validate</id>
                         <phase>validate</phase>
                         <configuration>
+                            <!--set this to true to see if build fails-->
                             <failOnViolation>false</failOnViolation>
                             <sourceDirectories>
                                 <sourceDirectory>${basedir}/src</sourceDirectory>
                             </sourceDirectories>
-                            <!-- or use url like https://github.com/hhru/checkstyle/raw/checkstyle-1.1/checkstyle.xml here -->
-                            <configLocation>checkstyle.xml</configLocation>
+                            <hhCheckStyleConfig>
+                                <cfg>shared-checkstyle.xml</cfg>
+                                <cfg>example-checkstyle.xml</cfg>
+                            </hhCheckStyleConfig>
+
                             <encoding>UTF-8</encoding>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         </configuration>
