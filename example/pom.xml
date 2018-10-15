@@ -26,8 +26,8 @@
                                 <sourceDirectory>${basedir}/src</sourceDirectory>
                             </sourceDirectories>
                             <hhCheckStyleConfig>
-                                <cfg>shared-checkstyle.xml</cfg>
-                                <cfg>example-checkstyle.xml</cfg>
+                                <config>shared-checkstyle.xml</config>
+                                <config>example-checkstyle.xml</config>
                             </hhCheckStyleConfig>
 
                             <encoding>UTF-8</encoding>
