@@ -3,5 +3,9 @@
         "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name="Checker">
+    <!--example of configuration inheritance-->
     <property name="hh-parent-config" value="../shared-checkstyle.xml"/>
+    <module name="TreeWalker">
+        <module name="EqualsAvoidNull"/>
+    </module>
 </module>
