@@ -89,8 +89,8 @@ public final class ConfigMergeProcessor {
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
     transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
     transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-    transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//Puppy Crawl//DTD Check Configuration 1.3//EN");
-    transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://www.puppycrawl.com/dtds/configuration_1_3.dtd");
+    transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN");
+    transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "https://checkstyle.org/dtds/configuration_1_3.dtd");
     transformer.transform(new DOMSource(document), new StreamResult(file));
   }
 
