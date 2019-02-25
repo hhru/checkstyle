@@ -40,13 +40,12 @@
             <plugin>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>hh-maven-checkstyle-plugin</artifactId>
-                <version>1.4</version>
+                <version>1.6</version>
                 <executions>
                     <execution>
                         <id>validate</id>
                         <phase>validate</phase>
                         <configuration>
-                            <skip>true</skip>
                             <failOnViolation>true</failOnViolation>
                             <sourceDirectories>
                                 <sourceDirectory>${basedir}/src</sourceDirectory>
