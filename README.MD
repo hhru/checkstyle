@@ -4,6 +4,10 @@
 > [Как работает merge](merge-description.md)
 Пример стандартного использования: 
 ![example](./example)
+## Как собрать
+1. `merge --no-ff`
+2. `mvn release:prepare mvn release:perform` 
+> Сервис использует практику dogfood, поэтому после релиза полезно поднять версию плагина в помнике
 ## Тулы для работы с checkstyle
 - ![hh-maven-checkstyle-plugin](./hh-maven-checkstyle-plugin) - maven-plugin, обертка над [maven-checkstyle-plugin](https://maven.apache.org/plugins/maven-checkstyle-plugin/), который включает в себя наши кастомные чеки, конфиги и механизм наследования.  
 **При сборке своих конфигов можно использовать `<property name="hh-parent-config" value="..."/>`**,  
