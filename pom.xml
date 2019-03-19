@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <checkstyle.version>8.12</checkstyle.version>
+        <checkstyle.version>8.18</checkstyle.version>
     </properties>
 
     <dependencyManagement>
