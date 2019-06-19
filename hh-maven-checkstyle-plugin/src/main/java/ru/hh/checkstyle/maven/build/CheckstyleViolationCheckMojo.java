@@ -44,6 +44,8 @@ public class CheckstyleViolationCheckMojo extends org.apache.maven.plugins.check
 
   public CheckstyleViolationCheckMojo() throws ParserConfigurationException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    //to be able to work offline w/o access to checkstyle.org
+    factory.setValidating(false);
     builder = factory.newDocumentBuilder();
   }
 
