@@ -40,7 +40,7 @@
             <plugin>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>hh-maven-checkstyle-plugin</artifactId>
-                <version>1.7</version>
+                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>validate</id>
