@@ -1,5 +1,6 @@
 package ru.hh.checkstyle;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 public class NonConstantOptionalOrElseCheckTestInput {
@@ -29,10 +30,20 @@ public class NonConstantOptionalOrElseCheckTestInput {
     int valueMethodConstantInline = Optional.ofNullable(1).orElse(2);
     int val = 2;
     int valueMethodConstant = Optional.ofNullable(1).orElse(val);
+
+    Service constructorEmptyArgs = Optional.ofNullable(null).orElse(new Service());
+    Service constructorWithArgs = Optional.ofNullable(null).orElse(new Service(2));
+    Service constructorFullPath =
+        Optional.ofNullable(null).orElse(new ru.hh.checkstyle.NonConstantOptionalOrElseCheckTestInput.Service(2));
+    Map<String, String> constructorTypeParams = Optional.ofNullable(null).orElse(new HashMap<>());
   }
 
   private static class Service {
     private final Integer value;
+
+    private Service() {
+
+    }
 
     private Service(Integer value) {
       this.value = value;

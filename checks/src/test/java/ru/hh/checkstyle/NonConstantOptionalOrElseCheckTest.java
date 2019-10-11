@@ -3,7 +3,9 @@ package ru.hh.checkstyle;
 import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import org.junit.Test;
-import static ru.hh.checkstyle.NonConstantOptionalOrElseCheck.MSG_KEY;
+
+import static ru.hh.checkstyle.NonConstantOptionalOrElseCheck.METHOD_MSG_KEY;
+import static ru.hh.checkstyle.NonConstantOptionalOrElseCheck.NEW_MSG_KEY;
 
 public class NonConstantOptionalOrElseCheckTest extends AbstractModuleTestSupport {
 
@@ -17,12 +19,16 @@ public class NonConstantOptionalOrElseCheckTest extends AbstractModuleTestSuppor
     final DefaultConfiguration checkConfig =
       createModuleConfig(NonConstantOptionalOrElseCheck.class);
     String[] expected = {
-      "8:77: " + getCheckMessage(MSG_KEY, "orElse()", "staticService.getValue()"),
-      "9:77: " + getCheckMessage(MSG_KEY, "orElse()", "createStatic()"),
-      "16:55: " + getCheckMessage(MSG_KEY, "orElse()", "staticService.getValue()"),
-      "17:55: " + getCheckMessage(MSG_KEY, "orElse()", "createStatic()"),
-      "27:56: " + getCheckMessage(MSG_KEY, "orElse()", "staticService.getValue()"),
-      "28:56: " + getCheckMessage(MSG_KEY, "orElse()", "createStatic()"),
+        "9:77: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "staticService.getValue()"),
+        "10:77: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "createStatic()"),
+        "17:55: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "staticService.getValue()"),
+        "18:55: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "createStatic()"),
+        "28:56: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "staticService.getValue()"),
+        "29:56: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "createStatic()"),
+        "34:68: " + getCheckMessage(NEW_MSG_KEY, "orElse()", "new Service..."),
+        "35:67: " + getCheckMessage(NEW_MSG_KEY, "orElse()", "new Service..."),
+        "37:41: " + getCheckMessage(NEW_MSG_KEY, "orElse()", "new Service..."),
+        "38:81: " + getCheckMessage(NEW_MSG_KEY, "orElse()", "new HashMap..."),
     };
     verify(checkConfig, getPath("NonConstantOptionalOrElseCheckTestInput.java"), expected);
   }
