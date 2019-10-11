@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 
 public class NonConstantOptionalOrElseCheck extends AbstractCheck {
 
-  public static final String MSG_KEY = "ru.hh.checkstyle.optional.non.constant.or.else";
+  public static final String METHOD_MSG_KEY = "ru.hh.checkstyle.optional.non.constant.or.else";
+  public static final String NEW_MSG_KEY = "ru.hh.checkstyle.optional.constructor.or.else";
 
   private Pattern methodNamePattern = CommonUtil.createPattern("orElse");
 
@@ -47,7 +48,10 @@ public class NonConstantOptionalOrElseCheck extends AbstractCheck {
               DetailAST argExpr = argLineList.getFirstChild();
               if (argExpr.getChildCount(TokenTypes.METHOD_CALL) > 0) {
                 String methodLiteral = orElseCandidate + ast.getText() + ast.getLastChild().getText();
-                log(ast, MSG_KEY, methodLiteral, getMethodLiteral(argExpr.findFirstToken(TokenTypes.METHOD_CALL)));
+                log(ast, METHOD_MSG_KEY, methodLiteral, getMethodLiteral(argExpr.findFirstToken(TokenTypes.METHOD_CALL)));
+              } else if (argExpr.getChildCount(TokenTypes.LITERAL_NEW) > 0) {
+                String newInstanceLiteral = orElseCandidate + ast.getText() + ast.getLastChild().getText();
+                log(ast, NEW_MSG_KEY, newInstanceLiteral, getNewLiteral(argExpr.findFirstToken(TokenTypes.LITERAL_NEW)));
               }
             }
           }
@@ -71,4 +75,18 @@ public class NonConstantOptionalOrElseCheck extends AbstractCheck {
     return methodNameInCode + methodCallRoot.getText() + methodCallRoot.getLastChild().getText();
   }
 
+  private static String getNewLiteral(DetailAST newCallRoot) {
+    final DetailAST className = newCallRoot.getFirstChild();
+    // Class that looks like: Class()
+    final String classNameInCode;
+    if (className.getType() == TokenTypes.IDENT) {
+      classNameInCode = className.getText();
+    }
+    // Class that looks like: ru.hh.Class()
+    else {
+      classNameInCode =  className.getLastChild().getText();
+    }
+
+    return newCallRoot.getText() + " " + classNameInCode + "...";
+  }
 }
