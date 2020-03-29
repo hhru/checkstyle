@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.maven.model.Resource;
@@ -37,8 +36,7 @@ public class ProcessConfigMojo extends AbstractMojo {
   private final DocumentBuilder builder;
 
   public ProcessConfigMojo() throws ParserConfigurationException {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    builder = factory.newDocumentBuilder();
+    builder = Utils.createConfigDocumentBuilder();
   }
 
   @Override
