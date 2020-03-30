@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -43,10 +42,7 @@ public class CheckstyleViolationCheckMojo extends org.apache.maven.plugins.check
   private final DocumentBuilder builder;
 
   public CheckstyleViolationCheckMojo() throws ParserConfigurationException {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    //to be able to work offline w/o access to checkstyle.org
-    factory.setValidating(false);
-    builder = factory.newDocumentBuilder();
+    builder = Utils.createConfigDocumentBuilder();
   }
 
   @Override
