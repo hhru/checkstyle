@@ -21,7 +21,10 @@
     </modules>
 
     <properties>
-        <checkstyle.version>8.29</checkstyle.version>
+        <checkstyle.version>8.36.1</checkstyle.version>
+        <maven.version>3.3.9</maven.version>
+        <maven.plugin.version>3.6.0</maven.plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencyManagement>
