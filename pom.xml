@@ -54,7 +54,6 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
                     <localCheckout>true</localCheckout>
-                    <pushChanges>false</pushChanges>
                 </configuration>
             </plugin>
         </plugins>
