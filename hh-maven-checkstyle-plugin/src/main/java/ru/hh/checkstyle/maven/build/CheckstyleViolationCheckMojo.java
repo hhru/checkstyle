@@ -24,7 +24,7 @@ import org.codehaus.plexus.util.ReflectionUtils;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-@Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST)
+@Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
 public class CheckstyleViolationCheckMojo extends org.apache.maven.plugins.checkstyle.CheckstyleViolationCheckMojo {
 
   @Parameter(property = "hh.checkstyle.component.config.location", required = true)
