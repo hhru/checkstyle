@@ -10,36 +10,16 @@
     <artifactId>checkstyle-config-compilation-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <description>maven plugin resolving import instruction for checkstyle config</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.5.2</version>
-                <configuration>
-                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>8</release>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.version>3.3.9</maven.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>${maven.version}</version>
+            <version>${maven-plugin-api.version}</version>
         </dependency>
 
         <dependency>
@@ -58,7 +38,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>3.3.9</version>
+            <version>${maven-plugin-api.version}</version>
         </dependency>
 
         <dependency>

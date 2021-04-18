@@ -33,34 +33,10 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>${project.groupId}</groupId>
+                <groupId>ru.hh.checkstyle</groupId>
                 <artifactId>hh-maven-checkstyle-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <failOnViolation>true</failOnViolation>
-                            <sourceDirectories>
-                                <sourceDirectory>${basedir}/src/main</sourceDirectory>
-                            </sourceDirectories>
-                            <hhCheckStyleConfig>
-                                <cfg>shared-checkstyle.xml</cfg>
-                            </hhCheckStyleConfig>
-                            <encoding>UTF-8</encoding>
-                            <includeTestSourceDirectory>false</includeTestSourceDirectory>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <release>8</release>
+                    <excludes>test/resources/ru/hh/checkstyle/NonConstantOptionalOrElseCheckTestInput.java</excludes>
                 </configuration>
             </plugin>
         </plugins>

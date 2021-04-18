@@ -5,7 +5,7 @@
     <parent>
         <groupId>ru.hh.public-pom</groupId>
         <artifactId>public-pom</artifactId>
-        <version>1.41</version>
+        <version>1.48</version>
     </parent>
 
     <groupId>ru.hh.checkstyle</groupId>
@@ -22,6 +22,7 @@
 
     <properties>
         <checkstyle.version>8.36.1</checkstyle.version>
+        <maven-plugin-api.version>3.3.9</maven-plugin-api.version>
     </properties>
 
     <dependencyManagement>
@@ -36,6 +37,24 @@
 
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <release>11</release>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <configuration>
+                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
