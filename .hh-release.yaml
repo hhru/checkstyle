@@ -1,4 +1,4 @@
-version: '1.15'
+version: '1.16'
 build_image: registry.pyn.ru/openjdk11-building:2020.02.18
 build_method: mvn_build
 deploy_method: mvn_deploy
