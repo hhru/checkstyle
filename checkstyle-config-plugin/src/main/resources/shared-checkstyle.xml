@@ -20,6 +20,11 @@
         </module>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
+        <module name="ImportOrder">
+            <property name="option" value="inflow"/>
+            <property name="ordered" value="true"/>
+            <property name="separated" value="false"/>
+        </module>
         <module name="UpperEll"/>
         <module name="ArrayTypeStyle"/>
         <module name="MemberName"/>
