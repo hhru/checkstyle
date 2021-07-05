@@ -46,7 +46,6 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <!-- TODO При следующем апдейте бери версию из public-pom'а -->
                     <version>3.6.1</version>
                     <configuration>
                         <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
