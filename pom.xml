@@ -5,7 +5,7 @@
     <parent>
         <groupId>ru.hh.public-pom</groupId>
         <artifactId>public-pom</artifactId>
-        <version>1.49</version>
+        <version>1.52.3</version>
     </parent>
 
     <groupId>ru.hh.checkstyle</groupId>
@@ -21,8 +21,8 @@
     </modules>
 
     <properties>
-        <checkstyle.version>8.43</checkstyle.version>
-        <maven-plugin-api.version>3.6.3</maven-plugin-api.version>
+        <checkstyle.version>10.5.0</checkstyle.version>
+        <maven-plugin-api.version>3.8.6</maven-plugin-api.version>
     </properties>
 
     <dependencyManagement>
@@ -32,6 +32,16 @@
                 <artifactId>checkstyle</artifactId>
                 <version>${checkstyle.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>3.7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-resources</artifactId>
+                <version>1.1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -39,14 +49,8 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <release>11</release>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.7.0</version>
                     <configuration>
                         <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                     </configuration>

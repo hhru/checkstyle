@@ -2,8 +2,7 @@ package ru.hh.checkstyle;
 
 import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import static ru.hh.checkstyle.NonConstantOptionalOrElseCheck.METHOD_MSG_KEY;
 import static ru.hh.checkstyle.NonConstantOptionalOrElseCheck.NEW_MSG_KEY;
 
