@@ -54,6 +54,10 @@
             <property name="lineWrappingIndentation" value="4"/>
             <property name="forceStrictCondition" value="false"/>
         </module>
+        <module name="MatchXpath">
+            <property name="query" value="//COMMENT_CONTENT[contains(@text, '@author') and (starts-with(@text, '*\n') or not(contains(@text, '\n')))]"/>
+            <message key="matchxpath.match" value="Avoid using @author tag."/>
+        </module>
     </module>
     <module name="LineLength">
         <property name="max" value="150"/>
