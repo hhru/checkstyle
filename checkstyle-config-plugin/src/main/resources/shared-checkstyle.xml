@@ -64,6 +64,13 @@
             />
             <message key="matchxpath.match" value="Avoid using @author tag."/>
         </module>
+        <module name="MatchXpath">
+            <property
+                    name="query"
+                    value="//VARIABLE_DEF/TYPE/IDENT[@text='var']/../../ASSIGN/EXPR/*[self::LITERAL_FALSE or self::LITERAL_TRUE or self::NUM_INT or self::NUM_LONG or self::NUM_FLOAT or self::NUM_DOUBLE or self::CHAR_LITERAL]"
+            />
+            <message key="matchxpath.match" value="Avoid using var with primitives"/>
+        </module>
         <module name="MissingDeprecated"/>
         <module name="WhitespaceAround">
             <property
