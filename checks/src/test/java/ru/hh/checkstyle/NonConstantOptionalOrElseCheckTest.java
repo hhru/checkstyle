@@ -15,8 +15,7 @@ public class NonConstantOptionalOrElseCheckTest extends AbstractModuleTestSuppor
 
   @Test
   public void testCheck() throws Exception {
-    final DefaultConfiguration checkConfig =
-      createModuleConfig(NonConstantOptionalOrElseCheck.class);
+    final DefaultConfiguration checkConfig = createModuleConfig(NonConstantOptionalOrElseCheck.class);
     String[] expected = {
         "9:77: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "staticService.getValue()"),
         "10:77: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "createStatic()"),
