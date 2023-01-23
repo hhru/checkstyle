@@ -5,3 +5,4 @@ deploy_method: mvn_deploy
 update_method: mvn_update
 
 type: library
+changelog: true
