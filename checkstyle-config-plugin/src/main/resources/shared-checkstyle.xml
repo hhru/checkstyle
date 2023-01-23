@@ -79,6 +79,7 @@
             />
         </module>
         <module name="ArrayTrailingComma"/>
+        <module name="InnerTypeLast"/>
     </module>
     <module name="LineLength">
         <property name="max" value="150"/>
