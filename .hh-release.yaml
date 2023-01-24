@@ -1,8 +1,7 @@
-version: 1.17.1
+version: 1.18.0
 build_image: registry.pyn.ru/openjdk17-building:2022.12.14
 build_method: mvn_build
 deploy_method: mvn_deploy
 update_method: mvn_update
-
 type: library
 changelog: true
