@@ -2,8 +2,7 @@ package ru.hh.checkstyle;
 
 import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import static ru.hh.checkstyle.NonConstantOptionalOrElseCheck.METHOD_MSG_KEY;
 import static ru.hh.checkstyle.NonConstantOptionalOrElseCheck.NEW_MSG_KEY;
 
@@ -16,8 +15,7 @@ public class NonConstantOptionalOrElseCheckTest extends AbstractModuleTestSuppor
 
   @Test
   public void testCheck() throws Exception {
-    final DefaultConfiguration checkConfig =
-      createModuleConfig(NonConstantOptionalOrElseCheck.class);
+    final DefaultConfiguration checkConfig = createModuleConfig(NonConstantOptionalOrElseCheck.class);
     String[] expected = {
         "9:77: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "staticService.getValue()"),
         "10:77: " + getCheckMessage(METHOD_MSG_KEY, "orElse()", "createStatic()"),

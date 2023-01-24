@@ -9,7 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import static java.util.Optional.ofNullable;
 import java.util.function.Function;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,7 +24,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,10 +31,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toList;
 
 public final class ConfigMergeProcessor {
 
@@ -55,8 +55,8 @@ public final class ConfigMergeProcessor {
     Element root = doc.getDocumentElement();
     NodeList properties = root.getElementsByTagName(PROPERTY_TAG);
     List<Node> importProperties = IntStream.range(0, properties.getLength()).mapToObj(properties::item)
-      .filter(property -> IMPORT_PROPERTY_KEY.equals(property.getAttributes().getNamedItem(IDENTIFIER_ATTRIBUTE_NAME).getNodeValue()))
-      .collect(toList());
+        .filter(property -> IMPORT_PROPERTY_KEY.equals(property.getAttributes().getNamedItem(IDENTIFIER_ATTRIBUTE_NAME).getNodeValue()))
+        .collect(toList());
     if (importProperties.isEmpty()) {
       log.info("File " + filePath + " contains no imports, return as is");
       return root;
@@ -120,10 +120,10 @@ public final class ConfigMergeProcessor {
           Node namedItem = upItem.cloneNode(true);
           baseAttributes.setNamedItem(base.getOwnerDocument().adoptNode(namedItem));
         }
-        if (StringUtils.isNoneEmpty(upItem.getNodeValue())) {
+        if (Optional.ofNullable(upItem.getNodeValue()).map(value -> !value.isEmpty()).orElse(false)) {
           baseNamedItem.setNodeValue(upItem.getNodeValue());
         }
-        if (StringUtils.isNoneEmpty(upItem.getTextContent())) {
+        if (Optional.ofNullable(upItem.getTextContent()).map(content -> !content.isEmpty()).orElse(false)) {
           baseNamedItem.setTextContent(upItem.getTextContent());
         }
       }
@@ -133,17 +133,17 @@ public final class ConfigMergeProcessor {
       NodeList upChildNodes = up.getChildNodes();
       NodeList baseChildNodes = base.getChildNodes();
       Map<NodeNameKey, List<NodeWrapper>> baseNodeMap = IntStream.range(0, baseChildNodes.getLength()).mapToObj(baseChildNodes::item)
-        .filter(node -> node.getNodeType() != Node.TEXT_NODE)
-        .collect(groupingBy(NodeNameKey::new, mapping(NodeWrapper::new, toList())));
+          .filter(node -> node.getNodeType() != Node.TEXT_NODE)
+          .collect(groupingBy(NodeNameKey::new, mapping(NodeWrapper::new, toList())));
       for (int i = 0; i < upChildNodes.getLength(); i++) {
         Node upChildNode = upChildNodes.item(i);
         if (upChildNode.getNodeType() != Node.TEXT_NODE) {
           NodeNameKey upNodeKey = new NodeNameKey(upChildNode);
           Node baseChildNode = ofNullable(baseNodeMap.get(upNodeKey))
-            .flatMap(wrappers -> wrappers.stream().filter(wrapper -> !wrapper.isMerged()).findFirst()).map(wrapper -> {
-              wrapper.setMerged(true);
-              return wrapper.getNode();
-            }).orElse(null);
+              .flatMap(wrappers -> wrappers.stream().filter(wrapper -> !wrapper.isMerged()).findFirst()).map(wrapper -> {
+                wrapper.setMerged(true);
+                return wrapper.getNode();
+              }).orElse(null);
           if (baseChildNode == null) {
             Node newChild = cloneAndAdopt(upChildNode, base);
             base.appendChild(newChild);
@@ -172,7 +172,7 @@ public final class ConfigMergeProcessor {
       if (item.hasChildNodes()) {
         NodeList itemChildren = item.getChildNodes();
         IntStream.range(0, itemChildren.getLength()).mapToObj(itemChildren::item).forEach(ConfigMergeProcessor::clearIndentation);
-      } else if (item.getNodeType() == Node.TEXT_NODE && StringUtils.isBlank(item.getTextContent())) {
+      } else if (item.getNodeType() == Node.TEXT_NODE && Optional.ofNullable(item.getTextContent()).map(String::isBlank).orElse(true)) {
         node.removeChild(item);
       }
     }

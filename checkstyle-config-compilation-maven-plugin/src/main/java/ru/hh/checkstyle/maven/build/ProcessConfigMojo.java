@@ -21,8 +21,7 @@ import org.codehaus.plexus.resource.ResourceManager;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-@Mojo(name = "compile-config",
-  defaultPhase = LifecyclePhase.PROCESS_RESOURCES)
+@Mojo(name = "compile-config", defaultPhase = LifecyclePhase.PROCESS_RESOURCES)
 public class ProcessConfigMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.outputDirectory}", required = true)
   private File outputDirectory;
@@ -50,17 +49,17 @@ public class ProcessConfigMojo extends AbstractMojo {
     try {
       Path resourcePath = Paths.get(resource.getDirectory());
       Files.walk(resourcePath)
-        .filter(Files::isRegularFile)
-        .forEach(file -> {
-          try {
-            Node result = ConfigMergeProcessor.handleFile(builder, file, getLog());
-            Path relativeFilePath = resourcePath.relativize(file);
-            getLog().info("relative file path: " + relativeFilePath);
-            ConfigMergeProcessor.writeNodeToFile(builder, result, outputDirectory.toPath().resolve(relativeFilePath).toFile());
-          } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
-            throw new ExpectedExceptionRuntimeWrapper(e);
-          }
-        });
+          .filter(Files::isRegularFile)
+          .forEach(file -> {
+            try {
+              Node result = ConfigMergeProcessor.handleFile(builder, file, getLog());
+              Path relativeFilePath = resourcePath.relativize(file);
+              getLog().info("relative file path: " + relativeFilePath);
+              ConfigMergeProcessor.writeNodeToFile(builder, result, outputDirectory.toPath().resolve(relativeFilePath).toFile());
+            } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
+              throw new ExpectedExceptionRuntimeWrapper(e);
+            }
+          });
     } catch (IOException | ExpectedExceptionRuntimeWrapper e) {
       throw new MojoExecutionException("failed to process resources", e);
     }
