@@ -71,6 +71,21 @@
             />
             <message key="matchxpath.match" value="Avoid using var with primitives"/>
         </module>
+        <module name="MatchXpath">
+            <!-- Check will be skipped in case of @Override annotation. Otherwise, it will be impossible to extend/implement classes/interfaces from 3rd party libraries -->
+            <property
+                    name="query"
+                    value="//CLASS_DEF/OBJBLOCK/*[self::METHOD_DEF or self::CTOR_DEF][not(MODIFIERS/ANNOTATION/IDENT[@text='Override'])]/PARAMETERS/PARAMETER_DEF/TYPE/IDENT[@text='Optional']"
+            />
+            <message key="matchxpath.match" value="Avoid using Optional in parameters"/>
+        </module>
+        <module name="MatchXpath">
+            <property
+                    name="query"
+                    value="//CLASS_DEF/OBJBLOCK/VARIABLE_DEF/TYPE/IDENT[@text='Optional']"
+            />
+            <message key="matchxpath.match" value="Avoid using Optional in class fields"/>
+        </module>
         <module name="MissingDeprecated"/>
         <module name="WhitespaceAround">
             <property
