@@ -66,6 +66,11 @@
                     <localCheckout>true</localCheckout>
                 </configuration>
             </plugin>
+            <!-- need only for test purposes -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
