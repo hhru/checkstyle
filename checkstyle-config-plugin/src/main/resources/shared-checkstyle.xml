@@ -95,6 +95,7 @@
         </module>
         <module name="ArrayTrailingComma"/>
         <module name="InnerTypeLast"/>
+        <module name="SuppressWarningsHolder"/>
     </module>
     <module name="LineLength">
         <property name="max" value="150"/>
@@ -105,4 +106,5 @@
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
     </module>
+    <module name="SuppressWarningsFilter"/>
 </module>
