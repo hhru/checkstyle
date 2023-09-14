@@ -1,3 +1,9 @@
+-   name: 1.19.1
+    date: '2023-09-14T11:33:17.379865+03:00'
+    description: ''
+    instructions: ''
+    compatible: true
+
 -   name: 1.19.0
     date: '2023-05-11T11:50:49.650425+03:00'
     description: "* Обновление Checkstyle до 10.9.3.\r\n* Добавлена проверка на запрет\
