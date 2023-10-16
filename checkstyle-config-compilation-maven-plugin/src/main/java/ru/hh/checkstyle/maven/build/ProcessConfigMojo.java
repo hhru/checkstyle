@@ -48,18 +48,21 @@ public class ProcessConfigMojo extends AbstractMojo {
   private void processResource(Resource resource) throws MojoExecutionException {
     try {
       Path resourcePath = Paths.get(resource.getDirectory());
-      Files.walk(resourcePath)
+      Files
+          .walk(resourcePath)
           .filter(Files::isRegularFile)
-          .forEach(file -> {
-            try {
-              Node result = ConfigMergeProcessor.handleFile(builder, file, getLog());
-              Path relativeFilePath = resourcePath.relativize(file);
-              getLog().info("relative file path: " + relativeFilePath);
-              ConfigMergeProcessor.writeNodeToFile(builder, result, outputDirectory.toPath().resolve(relativeFilePath).toFile());
-            } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
-              throw new ExpectedExceptionRuntimeWrapper(e);
-            }
-          });
+          .forEach(
+              file -> {
+                try {
+                  Node result = ConfigMergeProcessor.handleFile(builder, file, getLog());
+                  Path relativeFilePath = resourcePath.relativize(file);
+                  getLog().info("relative file path: " + relativeFilePath);
+                  ConfigMergeProcessor.writeNodeToFile(builder, result, outputDirectory.toPath().resolve(relativeFilePath).toFile());
+                } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
+                  throw new ExpectedExceptionRuntimeWrapper(e);
+                }
+              }
+          );
     } catch (IOException | ExpectedExceptionRuntimeWrapper e) {
       throw new MojoExecutionException("failed to process resources", e);
     }
