@@ -43,7 +43,7 @@
                 <groupId>ru.hh.checkstyle</groupId>
                 <artifactId>hh-maven-checkstyle-plugin</artifactId>
                 <configuration>
-                    <excludes>test/resources/ru/hh/checkstyle/NonConstantOptionalOrElseCheckTestInput.java</excludes>
+                    <excludes>test/resources/ru/hh/checkstyle/*.java</excludes>
                 </configuration>
             </plugin>
         </plugins>

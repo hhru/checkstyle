@@ -54,7 +54,9 @@ public final class ConfigMergeProcessor {
     Document doc = builder.parse(Files.newInputStream(filePath, StandardOpenOption.READ));
     Element root = doc.getDocumentElement();
     NodeList properties = root.getElementsByTagName(PROPERTY_TAG);
-    List<Node> importProperties = IntStream.range(0, properties.getLength()).mapToObj(properties::item)
+    List<Node> importProperties = IntStream
+        .range(0, properties.getLength())
+        .mapToObj(properties::item)
         .filter(property -> IMPORT_PROPERTY_KEY.equals(property.getAttributes().getNamedItem(IDENTIFIER_ATTRIBUTE_NAME).getNodeValue()))
         .collect(toList());
     if (importProperties.isEmpty()) {
@@ -132,7 +134,9 @@ public final class ConfigMergeProcessor {
     if (up.hasChildNodes()) {
       NodeList upChildNodes = up.getChildNodes();
       NodeList baseChildNodes = base.getChildNodes();
-      Map<NodeNameKey, List<NodeWrapper>> baseNodeMap = IntStream.range(0, baseChildNodes.getLength()).mapToObj(baseChildNodes::item)
+      Map<NodeNameKey, List<NodeWrapper>> baseNodeMap = IntStream
+          .range(0, baseChildNodes.getLength())
+          .mapToObj(baseChildNodes::item)
           .filter(node -> node.getNodeType() != Node.TEXT_NODE)
           .collect(groupingBy(NodeNameKey::new, mapping(NodeWrapper::new, toList())));
       for (int i = 0; i < upChildNodes.getLength(); i++) {
@@ -140,10 +144,12 @@ public final class ConfigMergeProcessor {
         if (upChildNode.getNodeType() != Node.TEXT_NODE) {
           NodeNameKey upNodeKey = new NodeNameKey(upChildNode);
           Node baseChildNode = ofNullable(baseNodeMap.get(upNodeKey))
-              .flatMap(wrappers -> wrappers.stream().filter(wrapper -> !wrapper.isMerged()).findFirst()).map(wrapper -> {
+              .flatMap(wrappers -> wrappers.stream().filter(wrapper -> !wrapper.isMerged()).findFirst())
+              .map(wrapper -> {
                 wrapper.setMerged(true);
                 return wrapper.getNode();
-              }).orElse(null);
+              })
+              .orElse(null);
           if (baseChildNode == null) {
             Node newChild = cloneAndAdopt(upChildNode, base);
             base.appendChild(newChild);
@@ -206,7 +212,8 @@ public final class ConfigMergeProcessor {
     private NodeNameKey(Node node) {
       nodeName = node.getNodeName();
       nameAttributeValue = node.hasAttributes() ? ofNullable(node.getAttributes().getNamedItem(IDENTIFIER_ATTRIBUTE_NAME))
-        .map(Node::getTextContent).orElse(null) : null;
+          .map(Node::getTextContent)
+          .orElse(null) : null;
     }
 
     @Override

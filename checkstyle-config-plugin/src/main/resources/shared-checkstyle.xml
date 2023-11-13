@@ -48,6 +48,7 @@
             <property name="tokens" value="COMMA, SEMI"/>
         </module>
         <module name="ru.hh.checkstyle.NonConstantOptionalOrElseCheck"/>
+        <module name="ru.hh.checkstyle.WrapNewLinesMethodChainCallsCheck"/>
         <module name="Indentation">
             <property name="basicOffset" value="2"/>
             <property name="braceAdjustment" value="0"/>

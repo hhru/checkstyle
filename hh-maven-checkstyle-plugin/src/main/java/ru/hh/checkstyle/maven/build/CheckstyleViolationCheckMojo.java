@@ -77,13 +77,18 @@ public class CheckstyleViolationCheckMojo extends org.apache.maven.plugins.check
   }
 
   private List<Node> resolveToElements(List<Path> hhConfigs) {
-    return hhConfigs.stream().map(hhConfig -> {
-      try {
-        return ConfigMergeProcessor.handleFile(this::resolveResource, builder, hhConfig, getLog());
-      } catch (IOException | SAXException | ParserConfigurationException e) {
-        throw new ExpectedExceptionRuntimeWrapper(e);
-      }
-    }).collect(Collectors.toList());
+    return hhConfigs
+        .stream()
+        .map(
+            hhConfig -> {
+              try {
+                return ConfigMergeProcessor.handleFile(this::resolveResource, builder, hhConfig, getLog());
+              } catch (IOException | SAXException | ParserConfigurationException e) {
+                throw new ExpectedExceptionRuntimeWrapper(e);
+              }
+            }
+        )
+        .collect(Collectors.toList());
   }
 
   private void configureResourceLocator(ResourceManager resourceManager) throws IllegalAccessException {
