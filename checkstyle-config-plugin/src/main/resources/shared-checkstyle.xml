@@ -18,8 +18,9 @@
         <module name="IllegalImport">
             <property
                     name="illegalPkgs"
-                    value="sun, ru.hh.hhid.abi_shaded, ru.hh.guice.hibernate, junit.framework, org.apache.log4j, org.jetbrains.annotations"
+                    value="sun, ru\.hh\.hhid\.abi_shaded, ru\.hh\.guice\.hibernate, junit\.framework, org\.apache\.log4j, org\.jetbrains\.annotations, javax\.(?!sql|swing|xml|naming|transaction\.xa).*, javax\.xml\.bind, javax\.xml\.soap, javax\.xml\.ws"
             />
+            <property name="regexp" value="true"/>
         </module>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
