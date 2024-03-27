@@ -18,7 +18,7 @@
         <module name="IllegalImport">
             <property
                     name="illegalPkgs"
-                    value="sun, ru\.hh\.hhid\.abi_shaded, ru\.hh\.guice\.hibernate, junit\.framework, org\.apache\.log4j, org\.jetbrains\.annotations, javax\.(?!sql|swing|xml|naming|transaction\.xa).*, javax\.xml\.bind, javax\.xml\.soap, javax\.xml\.ws"
+                    value="sun, ru\.hh\.hhid\.abi_shaded, ru\.hh\.guice\.hibernate, junit\.framework, org\.apache\.log4j, org\.jetbrains\.annotations, javax\.annotation(?!\.processing), javax\.ejb, javax\.el, javax\.mail, javax\.persistence, javax\.security\.auth\.message, javax\.servlet, javax\.transaction(?!\.xa), javax\.websocket, javax\.activation, javax\.batch, javax\.decorator, javax\.enterprise, javax\.faces, javax\.jms, javax\.json, javax\.jws, javax\.interceptor, javax\.inject, javax\.management\.j2ee, javax\.resource, javax\.security\.auth\.enterprise, javax\.security\.auth\.jacc, javax\.validation, javax\.ws\.rs, javax\.xml\.bind, javax\.xml\.soap, javax\.xml\.ws"
             />
             <property name="regexp" value="true"/>
         </module>
