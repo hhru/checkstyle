@@ -11,7 +11,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
   private static final int[] METHOD_CHAIN_CONTINUATION_NODES = {
       TokenTypes.METHOD_CALL,
       TokenTypes.DOT,
-      TokenTypes.INDEX_OP,
+      TokenTypes.INDEX_OP
   };
 
   private static final int[] PARENTS_OF_METHOD_CALL = {
@@ -38,7 +38,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
   @Override
   public void visitToken(DetailAST methodCall) {
     if (isTopMostMethodCall(methodCall) && !isSingleLineMethodChain(methodCall)) {
-      checkMethodChainingMultiLine(methodCall);
+        checkMethodChainingMultiLine(methodCall);
     }
   }
 
