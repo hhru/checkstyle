@@ -48,7 +48,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     int methodCallCount = 1;
     while (TokenUtil.isOfType(childAst, METHOD_CHAIN_CONTINUATION_NODES) || TokenUtil.isOfType(childAst, TokenTypes.IDENT)) {
       if (TokenUtil.isOfType(childAst, TokenTypes.METHOD_CALL) || isVariableReference(childAst) || isCallAfterMultilineCall(childAst)) {
-        if (TokenUtil.areOnSameLine(currentLineOuterMostMethodAst, childAst)) {
+        if (currentLineOuterMostMethodAst.getLineNo() == childAst.getLineNo()) {
           methodCallCount++;
           if (methodCallCount > 1) {
             logViolation(currentLineOuterMostMethodAst);
@@ -126,7 +126,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     }
     DetailAST methodCallDescendantAst = getMethodCallDescendantAst(childAst);
     return TokenUtil.isOfType(methodCallDescendantAst, TokenTypes.METHOD_CALL)
-        && !TokenUtil.areOnSameLine(methodCallDescendantAst, childAst)
-        && TokenUtil.areOnSameLine(methodCallDescendantAst.findFirstToken(TokenTypes.RPAREN), childAst);
+        && methodCallDescendantAst.getLineNo() != childAst.getLineNo()
+        && methodCallDescendantAst.findFirstToken(TokenTypes.RPAREN).getLineNo() == childAst.getLineNo();
   }
 }
