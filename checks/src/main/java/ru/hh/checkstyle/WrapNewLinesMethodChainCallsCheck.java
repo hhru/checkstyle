@@ -45,7 +45,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
 
   private MethodCallInfo analyzeTree(DetailAST methodCall) {
     DetailAST dot = methodCall.findFirstToken(TokenTypes.DOT);
-    MethodCallInfo methodCallInfo = new MethodCallInfo(methodCall, dot != null);
+    MethodCallInfo methodCallInfo = new MethodCallInfo(methodCall, dot);
     while (dot != null && dot.hasChildren()) {
       DetailAST chainedMethodCall = dot.findFirstToken(TokenTypes.METHOD_CALL);
       if (chainedMethodCall == null) {
@@ -63,7 +63,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
         if (dot == null) {
           Optional.ofNullable(chainedMethodCall.getFirstChild()).ifPresent(methodCallInfo::setCaller);
         }
-        methodCallInfo.addLine(chainedMethodCall.getLineNo(), dot != null);
+        methodCallInfo.addLine(chainedMethodCall.getLineNo(), dot);
       }
     }
     return methodCallInfo;
@@ -75,16 +75,19 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     private boolean mustBeOneLineExpression;
     private final Set<Integer> lineNumbers = new HashSet<>();
 
-    MethodCallInfo(DetailAST methodCall, boolean hasDot) {
-      addLine(methodCall.getLineNo(), hasDot);
-      if (!hasDot) {
+    MethodCallInfo(DetailAST methodCall, DetailAST dot) {
+      addLine(methodCall.getLineNo(), dot);
+      if (dot == null) {
         setCaller(methodCall.findFirstToken(TokenTypes.IDENT));
       }
     }
 
-    public void addLine(Integer line, boolean increaseDepth) {
+    /**
+     * @param dot can be null
+     */
+    public void addLine(Integer line, DetailAST dot) {
       lineNumbers.add(line);
-      if (increaseDepth) {
+      if (dot != null) {
         chainDepth++;
       }
     }
@@ -94,7 +97,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     }
 
     public void setCaller(DetailAST caller) {
-      addLine(caller.getLineNo(), false);
+      addLine(caller.getLineNo(), null);
       this.caller = caller;
     }
 
