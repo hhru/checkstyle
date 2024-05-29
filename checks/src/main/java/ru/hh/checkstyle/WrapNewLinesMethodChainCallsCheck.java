@@ -11,6 +11,8 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
 
   public static final String WRAPPED_CHAIN_MSG_KEY = "ru.hh.checkstyle.wrapped.chain";
 
+  private boolean allowUnwrappedFirstCall = false;
+
   @Override
   public int[] getDefaultTokens() {
     return new int[] { TokenTypes.METHOD_CALL };
@@ -24,6 +26,14 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
   @Override
   public int[] getRequiredTokens() {
     return getDefaultTokens();
+  }
+
+  public void setAllowUnwrappedFirstCall(boolean allowUnwrappedFirstCall) {
+    this.allowUnwrappedFirstCall = allowUnwrappedFirstCall;
+  }
+
+  public boolean getAllowUnwrappedFirstCall() {
+    return allowUnwrappedFirstCall;
   }
 
   @Override
@@ -45,7 +55,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
 
   private MethodCallInfo analyzeTree(DetailAST methodCall) {
     DetailAST dot = methodCall.findFirstToken(TokenTypes.DOT);
-    MethodCallInfo methodCallInfo = new MethodCallInfo(methodCall, dot);
+    MethodCallInfo methodCallInfo = new MethodCallInfo(methodCall, dot, allowUnwrappedFirstCall);
     while (dot != null && dot.hasChildren()) {
       DetailAST chainedMethodCall = dot.findFirstToken(TokenTypes.METHOD_CALL);
       if (chainedMethodCall == null) {
@@ -56,9 +66,9 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
         // ).next()
         int methodClosingParenthesis = Optional.ofNullable(chainedMethodCall.findFirstToken(TokenTypes.RPAREN)).map(DetailAST::getLineNo).orElse(-1);
         int previousDot = dot.getLineNo();
-        methodCallInfo.mustBeOneLineExpression(methodClosingParenthesis == previousDot);
-
         dot = chainedMethodCall.findFirstToken(TokenTypes.DOT);
+        methodCallInfo.mustBeOneLineExpression(methodClosingParenthesis == previousDot && (!allowUnwrappedFirstCall || dot != null));
+
         // case someMethod(another.method().chain())
         if (dot == null) {
           Optional.ofNullable(chainedMethodCall.getFirstChild()).ifPresent(methodCallInfo::setCaller);
@@ -70,12 +80,16 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
   }
 
   private static class MethodCallInfo {
+    private final boolean allowUnwrappedFirstCall;
     private int chainDepth;
     private DetailAST caller;
     private boolean mustBeOneLineExpression;
     private final Set<Integer> lineNumbers = new HashSet<>();
+    // first from code point of view and last from AST point of view
+    private int firstMethodLine;
 
-    MethodCallInfo(DetailAST methodCall, DetailAST dot) {
+    MethodCallInfo(DetailAST methodCall, DetailAST dot, boolean allowUnwrappedFirstCall) {
+      this.allowUnwrappedFirstCall = allowUnwrappedFirstCall;
       addLine(methodCall.getLineNo(), dot);
       if (dot == null) {
         setCaller(methodCall.findFirstToken(TokenTypes.IDENT));
@@ -88,6 +102,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     public void addLine(Integer line, DetailAST dot) {
       lineNumbers.add(line);
       if (dot != null) {
+        firstMethodLine = line;
         chainDepth++;
       }
     }
@@ -106,7 +121,18 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     }
 
     public boolean violate() {
-      return chainDepth > 1 && lineNumbers.size() > 1 && (mustBeOneLineExpression || lineNumbers.size() != chainDepth + 1);
+      if (chainDepth <= 1 || lineNumbers.size() <= 1) {
+        return false;
+      }
+      if (mustBeOneLineExpression) {
+        return true;
+      }
+
+      if (allowUnwrappedFirstCall && caller.getLineNo() == firstMethodLine) {
+        return lineNumbers.size() != chainDepth;
+      } else {
+        return lineNumbers.size() != chainDepth + 1;
+      }
     }
   }
 }

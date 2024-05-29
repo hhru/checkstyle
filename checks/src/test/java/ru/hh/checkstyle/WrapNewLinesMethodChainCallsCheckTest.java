@@ -25,9 +25,29 @@ public class WrapNewLinesMethodChainCallsCheckTest extends AbstractModuleTestSup
         "120:12: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
         "120:50: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
         "148:12: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
-        "175:13: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
-        "186:29: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
-        "187:105: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "176:13: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "187:29: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "188:105: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+    };
+    verify(checkConfig, getPath("WrapNewLinesMethodChainCallCheckTestInput.java"), expected);
+  }
+
+  @Test
+  public void testCheckWithAllowUnwrappedFirstCall() throws Exception {
+    final DefaultConfiguration checkConfig = createModuleConfig(WrapNewLinesMethodChainCallsCheck.class);
+    checkConfig.addProperty("allowUnwrappedFirstCall", "true");
+    String[] expected = {
+        "17:79: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "32:54: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "49:5: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "63:5: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "74:5: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "90:14: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "120:12: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "120:50: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "176:13: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "187:29: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
+        "188:105: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
     };
     verify(checkConfig, getPath("WrapNewLinesMethodChainCallCheckTestInput.java"), expected);
   }
