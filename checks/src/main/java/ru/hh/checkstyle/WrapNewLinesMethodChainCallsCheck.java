@@ -3,6 +3,7 @@ package ru.hh.checkstyle;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
+import com.puppycrawl.tools.checkstyle.utils.TokenUtil;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -10,6 +11,11 @@ import java.util.Set;
 public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
 
   public static final String WRAPPED_CHAIN_MSG_KEY = "ru.hh.checkstyle.wrapped.chain";
+  private static final int[] METHOD_CHAIN_CONTINUATION_NODES = {
+      TokenTypes.METHOD_CALL,
+      TokenTypes.DOT,
+      TokenTypes.INDEX_OP,
+  };
 
   private boolean allowUnwrappedFirstCall = false;
 
@@ -45,7 +51,29 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     MethodCallInfo methodCallInfo = analyzeTree(methodCall);
 
     if (methodCallInfo.violate()) {
-      log(methodCallInfo.getCaller(), WRAPPED_CHAIN_MSG_KEY);
+      checkMethodChainingMultiLine(methodCall);
+    }
+  }
+
+  private void checkMethodChainingMultiLine(DetailAST methodCallAst) {
+    DetailAST childAst = methodCallAst.getFirstChild();
+    DetailAST currentLineOuterMostMethodAst = methodCallAst;
+    int methodCallCount = 1;
+    while (TokenUtil.isOfType(childAst, METHOD_CHAIN_CONTINUATION_NODES) || TokenUtil.isOfType(childAst, TokenTypes.IDENT)) {
+      if (isSimpleMethodCall(childAst) || isVariableReference(childAst) || isCallAfterMultilineCall(childAst)) {
+        if (TokenUtil.areOnSameLine(currentLineOuterMostMethodAst, childAst)) {
+          methodCallCount++;
+          if (methodCallCount > 1) {
+            log(currentLineOuterMostMethodAst.getFirstChild(), WRAPPED_CHAIN_MSG_KEY);
+            currentLineOuterMostMethodAst = childAst;
+          }
+        }
+        else {
+          currentLineOuterMostMethodAst = childAst;
+          methodCallCount = 1;
+        }
+      }
+      childAst = getMethodCallDescendantAst(childAst);
     }
   }
 
@@ -79,10 +107,54 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     return methodCallInfo;
   }
 
+  private static DetailAST getMethodCallDescendantAst(DetailAST ast) {
+    DetailAST childAst = ast.getFirstChild();
+    while (childAst != null && childAst.getType() == TokenTypes.LPAREN) {
+      childAst = childAst.getNextSibling();
+      if (!TokenUtil.isOfType(childAst, METHOD_CHAIN_CONTINUATION_NODES)) {
+        childAst = getMethodCallDescendantAfterLParen(childAst);
+      }
+    }
+    return childAst;
+  }
+
+  private static DetailAST getMethodCallDescendantAfterLParen(DetailAST ast) {
+    if (TokenUtil.isOfType(ast, TokenTypes.QUESTION)) {
+      return ast;
+    }
+    DetailAST result = ast;
+    DetailAST childAst = result.getFirstChild();
+    while (childAst != null) {
+      result = childAst;
+      if (TokenUtil.isOfType(childAst, METHOD_CHAIN_CONTINUATION_NODES)) {
+        break;
+      }
+      childAst = childAst.getNextSibling();
+    }
+    return result;
+  }
+
+  private static boolean isVariableReference(DetailAST childAst) {
+    return TokenUtil.isOfType(childAst, TokenTypes.IDENT) && TokenUtil.isOfType(childAst.getParent(), TokenTypes.DOT);
+  }
+
+  private static boolean isCallAfterMultilineCall(DetailAST childAst) {
+    if (!TokenUtil.isOfType(childAst, TokenTypes.DOT)) {
+      return false;
+    }
+    DetailAST methodCallDescendantAst = getMethodCallDescendantAst(childAst);
+    return TokenUtil.isOfType(methodCallDescendantAst, TokenTypes.METHOD_CALL)
+        && !TokenUtil.areOnSameLine(methodCallDescendantAst, childAst)
+        && TokenUtil.areOnSameLine(methodCallDescendantAst.findFirstToken(TokenTypes.RPAREN), childAst);
+  }
+
+  private static boolean isSimpleMethodCall(DetailAST childAst) {
+    return TokenUtil.isOfType(childAst, TokenTypes.METHOD_CALL) && !TokenUtil.isOfType(childAst.getParent(), TokenTypes.TYPECAST);
+  }
+
   private static class MethodCallInfo {
     private final boolean allowUnwrappedFirstCall;
     private int chainDepth;
-    private DetailAST caller;
     private boolean mustBeOneLineExpression;
     private final Set<Integer> lineNumbers = new HashSet<>();
     // first from code point of view and last from AST point of view
@@ -107,13 +179,8 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
       }
     }
 
-    public DetailAST getCaller() {
-      return caller;
-    }
-
     public void setCaller(DetailAST caller) {
       addLine(caller.getLineNo(), null);
-      this.caller = caller;
     }
 
     public void mustBeOneLineExpression(boolean mustBeOneLineExpression) {
