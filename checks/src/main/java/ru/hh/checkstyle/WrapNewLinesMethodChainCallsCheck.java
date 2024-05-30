@@ -51,11 +51,14 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     MethodCallInfo methodCallInfo = analyzeTree(methodCall);
 
     if (methodCallInfo.violate()) {
-      checkMethodChainingMultiLine(methodCall);
+      if (!tryLogViolationDetails(methodCall)) {
+        logViolation(methodCallInfo.getCaller());
+      }
     }
   }
 
-  private void checkMethodChainingMultiLine(DetailAST methodCallAst) {
+  private boolean tryLogViolationDetails(DetailAST methodCallAst) {
+    boolean atLeastOneViolationIsLogged = false;
     DetailAST childAst = methodCallAst.getFirstChild();
     DetailAST currentLineOuterMostMethodAst = methodCallAst;
     int methodCallCount = 1;
@@ -64,7 +67,8 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
         if (TokenUtil.areOnSameLine(currentLineOuterMostMethodAst, childAst)) {
           methodCallCount++;
           if (methodCallCount > 1) {
-            log(currentLineOuterMostMethodAst.getFirstChild(), WRAPPED_CHAIN_MSG_KEY);
+            logViolation(currentLineOuterMostMethodAst.getFirstChild());
+            atLeastOneViolationIsLogged = true;
             currentLineOuterMostMethodAst = childAst;
           }
         }
@@ -75,6 +79,11 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
       }
       childAst = getMethodCallDescendantAst(childAst);
     }
+    return atLeastOneViolationIsLogged;
+  }
+
+  private void logViolation(DetailAST currentLineOuterMostMethodAst) {
+    log(currentLineOuterMostMethodAst, WRAPPED_CHAIN_MSG_KEY);
   }
 
   private boolean isMethodPartOfChain(DetailAST methodCall) {
@@ -155,6 +164,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
   private static class MethodCallInfo {
     private final boolean allowUnwrappedFirstCall;
     private int chainDepth;
+    private DetailAST caller;
     private boolean mustBeOneLineExpression;
     private final Set<Integer> lineNumbers = new HashSet<>();
     // first from code point of view and last from AST point of view
@@ -166,6 +176,10 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
       if (dot == null) {
         setCaller(methodCall.findFirstToken(TokenTypes.IDENT));
       }
+    }
+
+    public DetailAST getCaller() {
+      return caller;
     }
 
     /**
