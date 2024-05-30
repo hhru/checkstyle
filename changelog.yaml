@@ -1,3 +1,10 @@
+-   name: 1.21.0
+    date: '2024-05-30T19:25:55.217649+03:00'
+    description: add allowUnwrappedFirstCall property for module WrapNewLinesMethodChainCallsCheckTest;
+        option is activated in shared-checkstyle.xml
+    instructions: ''
+    compatible: true
+
 -   name: 1.20.2
     date: '2024-05-29T14:33:35.869173+03:00'
     description: revert 1.20.1 changes
@@ -7,8 +14,8 @@
 -   name: 1.20.1
     date: '2024-05-14T11:16:23.713049+03:00'
     description: (в этой версии ошибка, обновляйтесь на 1.20.2 или выше) Улучшено
-        правило, проверяющее разбивку вызовов методов по строкам в цепочке вызовов - 
-        теперь показывает сами проблемные вызовы, а не корень цепочки
+        правило, проверяющее разбивку вызовов методов по строкам в цепочке вызовов
+        - теперь показывает сами проблемные вызовы, а не корень цепочки
     instructions: ''
     compatible: true
 
