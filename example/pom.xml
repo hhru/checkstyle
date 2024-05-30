@@ -16,8 +16,9 @@
                 <artifactId>hh-maven-checkstyle-plugin</artifactId>
                 <version>${project.version}</version>
                 <configuration>
-                    <!--set this to true to see if build fails-->
-                    <failOnViolation>false</failOnViolation>
+                    <!-- Comment line below to see violations -->
+                    <skip>true</skip>
+                    <failOnViolation>true</failOnViolation>
                     <sourceDirectories combine.children="append">
                         <sourceDirectory>${basedir}/src</sourceDirectory>
                     </sourceDirectories>

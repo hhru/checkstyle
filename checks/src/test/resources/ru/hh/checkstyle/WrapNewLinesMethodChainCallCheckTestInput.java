@@ -143,7 +143,7 @@ public class WrapNewLinesMethodChainCallCheckTestInput {
         });
   }
 
-  // not new line before first call - NOT OK
+  // not new line before first call - OK only with "allowUnwrappedFirstCall" property
   public Set<String> myMethod3() {
     return Stream.concat(
         myAbsolutelyVeryLongNamedStringStaticSet.stream(),
@@ -151,7 +151,8 @@ public class WrapNewLinesMethodChainCallCheckTestInput {
             .stream()
             .map(integer -> integer * integer)
             .map(String::valueOf)
-    ).collect(Collectors.toSet());
+    )
+        .collect(Collectors.toSet());
   }
 
   // new line before first call - OK
