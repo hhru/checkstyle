@@ -59,25 +59,26 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
 
   private boolean tryLogViolationDetails(DetailAST methodCallAst) {
     boolean atLeastOneViolationIsLogged = false;
-    DetailAST childAst = methodCallAst.getFirstChild();
-    DetailAST currentLineOuterMostMethodAst = methodCallAst;
+    DetailAST child = methodCallAst.getFirstChild();
+    DetailAST currentLineOuterMostMethod = methodCallAst;
     int methodCallCount = 1;
-    while (TokenUtil.isOfType(childAst, METHOD_CHAIN_CONTINUATION_NODES) || TokenUtil.isOfType(childAst, TokenTypes.IDENT)) {
-      if (isSimpleMethodCall(childAst) || isVariableReference(childAst) || isCallAfterMultilineCall(childAst)) {
-        if (TokenUtil.areOnSameLine(currentLineOuterMostMethodAst, childAst)) {
+    while (TokenUtil.isOfType(child, METHOD_CHAIN_CONTINUATION_NODES) || TokenUtil.isOfType(child, TokenTypes.IDENT)) {
+      if (isSimpleMethodCall(child) || isVariableReference(child) || isCallAfterMultilineCall(child)) {
+        if (TokenUtil.areOnSameLine(currentLineOuterMostMethod, child)) {
           methodCallCount++;
           if (methodCallCount > 1) {
-            logViolation(currentLineOuterMostMethodAst.getFirstChild());
+            logViolation(
+                currentLineOuterMostMethod.getFirstChild() == null ? currentLineOuterMostMethod : currentLineOuterMostMethod.getFirstChild()
+            );
             atLeastOneViolationIsLogged = true;
-            currentLineOuterMostMethodAst = childAst;
+            currentLineOuterMostMethod = child;
           }
-        }
-        else {
-          currentLineOuterMostMethodAst = childAst;
+        } else {
+          currentLineOuterMostMethod = child;
           methodCallCount = 1;
         }
       }
-      childAst = getMethodCallDescendantAst(childAst);
+      child = child.getFirstChild();
     }
     return atLeastOneViolationIsLogged;
   }
@@ -116,49 +117,22 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     return methodCallInfo;
   }
 
-  private static DetailAST getMethodCallDescendantAst(DetailAST ast) {
-    DetailAST childAst = ast.getFirstChild();
-    while (childAst != null && childAst.getType() == TokenTypes.LPAREN) {
-      childAst = childAst.getNextSibling();
-      if (!TokenUtil.isOfType(childAst, METHOD_CHAIN_CONTINUATION_NODES)) {
-        childAst = getMethodCallDescendantAfterLParen(childAst);
-      }
-    }
-    return childAst;
+  private static boolean isVariableReference(DetailAST child) {
+    return TokenUtil.isOfType(child, TokenTypes.IDENT) && TokenUtil.isOfType(child.getParent(), TokenTypes.DOT);
   }
 
-  private static DetailAST getMethodCallDescendantAfterLParen(DetailAST ast) {
-    if (TokenUtil.isOfType(ast, TokenTypes.QUESTION)) {
-      return ast;
-    }
-    DetailAST result = ast;
-    DetailAST childAst = result.getFirstChild();
-    while (childAst != null) {
-      result = childAst;
-      if (TokenUtil.isOfType(childAst, METHOD_CHAIN_CONTINUATION_NODES)) {
-        break;
-      }
-      childAst = childAst.getNextSibling();
-    }
-    return result;
-  }
-
-  private static boolean isVariableReference(DetailAST childAst) {
-    return TokenUtil.isOfType(childAst, TokenTypes.IDENT) && TokenUtil.isOfType(childAst.getParent(), TokenTypes.DOT);
-  }
-
-  private static boolean isCallAfterMultilineCall(DetailAST childAst) {
-    if (!TokenUtil.isOfType(childAst, TokenTypes.DOT)) {
+  private static boolean isCallAfterMultilineCall(DetailAST child) {
+    if (!TokenUtil.isOfType(child, TokenTypes.DOT)) {
       return false;
     }
-    DetailAST methodCallDescendantAst = getMethodCallDescendantAst(childAst);
-    return TokenUtil.isOfType(methodCallDescendantAst, TokenTypes.METHOD_CALL)
-        && !TokenUtil.areOnSameLine(methodCallDescendantAst, childAst)
-        && TokenUtil.areOnSameLine(methodCallDescendantAst.findFirstToken(TokenTypes.RPAREN), childAst);
+    DetailAST methodCallDescendant = child.getFirstChild();
+    return TokenUtil.isOfType(methodCallDescendant, TokenTypes.METHOD_CALL)
+        && !TokenUtil.areOnSameLine(methodCallDescendant, child)
+        && TokenUtil.areOnSameLine(methodCallDescendant.findFirstToken(TokenTypes.RPAREN), child);
   }
 
-  private static boolean isSimpleMethodCall(DetailAST childAst) {
-    return TokenUtil.isOfType(childAst, TokenTypes.METHOD_CALL) && !TokenUtil.isOfType(childAst.getParent(), TokenTypes.TYPECAST);
+  private static boolean isSimpleMethodCall(DetailAST child) {
+    return TokenUtil.isOfType(child, TokenTypes.METHOD_CALL) && !TokenUtil.isOfType(child.getParent(), TokenTypes.TYPECAST);
   }
 
   private static class MethodCallInfo {
@@ -178,10 +152,6 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
       }
     }
 
-    public DetailAST getCaller() {
-      return caller;
-    }
-
     /**
      * @param dot can be null
      */
@@ -193,8 +163,13 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
       }
     }
 
+    public DetailAST getCaller() {
+      return caller;
+    }
+
     public void setCaller(DetailAST caller) {
       addLine(caller.getLineNo(), null);
+      this.caller = caller;
     }
 
     public void mustBeOneLineExpression(boolean mustBeOneLineExpression) {
