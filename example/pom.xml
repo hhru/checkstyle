@@ -3,7 +3,7 @@
     <parent>
         <groupId>ru.hh.checkstyle</groupId>
         <artifactId>parent</artifactId>
-        <version>1.20.1.jakarta-rc2-SNAPSHOT</version>
+        <version>1.21.0.jakarta-rc1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,8 +16,9 @@
                 <artifactId>hh-maven-checkstyle-plugin</artifactId>
                 <version>${project.version}</version>
                 <configuration>
-                    <!--set this to true to see if build fails-->
-                    <failOnViolation>false</failOnViolation>
+                    <!-- Comment line below to see violations -->
+                    <skip>true</skip>
+                    <failOnViolation>true</failOnViolation>
                     <sourceDirectories combine.children="append">
                         <sourceDirectory>${basedir}/src</sourceDirectory>
                     </sourceDirectories>

@@ -11,7 +11,7 @@
     <groupId>ru.hh.checkstyle</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.20.1.jakarta-rc2-SNAPSHOT</version>
+    <version>1.21.0.jakarta-rc1-SNAPSHOT</version>
     <modules>
         <module>checks</module>
         <module>example</module>
