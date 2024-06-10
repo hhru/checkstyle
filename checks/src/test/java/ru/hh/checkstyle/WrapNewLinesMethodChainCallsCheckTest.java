@@ -95,7 +95,6 @@ public class WrapNewLinesMethodChainCallsCheckTest extends AbstractModuleTestSup
         "50:109: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
         "51:18: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
         "64:18: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
-        "74:29: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
         "76:18: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
         "76:27: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),
         "90:59: " + getCheckMessage(WRAPPED_CHAIN_MSG_KEY),

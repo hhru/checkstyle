@@ -131,7 +131,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
   }
 
   private static boolean isProhibitedReference(DetailAST child, boolean allowUnwrappedFirstCall) {
-    return isOfIdentifier(child) && !allowUnwrappedFirstCall && getMethodCallDescendant(child) == null || isObjectCreation(child);
+    return !allowUnwrappedFirstCall && (isOfIdentifier(child) && getMethodCallDescendant(child) == null || isObjectCreation(child));
   }
 
   private static boolean isOfIdentifier(DetailAST child) {
