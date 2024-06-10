@@ -59,7 +59,7 @@ public class WrapNewLinesMethodChainCallCheckTestInput {
         .stream()
         .collect(Collectors.toSet());
 
-    //expression with static method - NOT OK or OK depending on "allowUnwrappedFirstCall" property
+    //expression with static method - NOT OK but firstCall is OK depending on "allowUnwrappedFirstCall" property
     List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
         .stream().filter(myVeryLongNameForJustASimpleInteger -> myVeryLongNameForJustASimpleInteger % 2 == 0)
         .toList();
