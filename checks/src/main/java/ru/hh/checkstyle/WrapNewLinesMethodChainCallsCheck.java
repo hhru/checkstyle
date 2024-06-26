@@ -64,7 +64,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
           || (!allowUnwrappedFirstCall && isCallChainBeginning(chainPreviousCallPoint))
       ) {
         if (areCallerAndCallOnTheSameLine(chainPreviousCallPoint, chainNextCallPoint)) {
-            logViolation(chainNextCallPoint.getFirstChild() == null ? chainNextCallPoint : chainNextCallPoint.getFirstChild());
+          logViolation(chainNextCallPoint.getFirstChild() == null ? chainNextCallPoint : chainNextCallPoint.getFirstChild());
         }
         chainNextCallPoint = chainPreviousCallPoint;
       }
@@ -75,7 +75,7 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
   private static boolean areCallerAndCallOnTheSameLine(DetailAST chainPreviousCallPoint, DetailAST chainNextCallPoint) {
     return TokenUtil.areOnSameLine(
         findCallerEndToken(chainPreviousCallPoint),
-        findChainNextCallToken(chainNextCallPoint).orElse(chainNextCallPoint)
+        chainNextCallPoint
     );
   }
 
@@ -138,26 +138,8 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     switch (callPoint.getType()) {
       case TokenTypes.METHOD_CALL:
         return callPoint.findFirstToken(TokenTypes.RPAREN);
-      case TokenTypes.DOT:
-        return Optional
-            .ofNullable(callPoint.getParent())
-            .map(WrapNewLinesMethodChainCallsCheck::findCallerEndToken)
-            .orElse(callPoint);
       default:
         return callPoint;
-    }
-  }
-
-  private static Optional<DetailAST> findChainNextCallToken(DetailAST callPoint) {
-    switch (callPoint.getType()) {
-      case TokenTypes.METHOD_CALL:
-        return Optional.of(callPoint);
-      case TokenTypes.DOT:
-        return Optional
-            .ofNullable(callPoint.getParent())
-            .filter(parent -> TokenUtil.isOfType(parent, TokenTypes.METHOD_CALL));
-      default:
-        return Optional.empty();
     }
   }
 
