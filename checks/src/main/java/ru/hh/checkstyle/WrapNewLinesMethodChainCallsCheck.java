@@ -3,6 +3,7 @@ package ru.hh.checkstyle;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
+import com.puppycrawl.tools.checkstyle.utils.TokenUtil;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -10,6 +11,12 @@ import java.util.Set;
 public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
 
   public static final String WRAPPED_CHAIN_MSG_KEY = "ru.hh.checkstyle.wrapped.chain";
+  private static final int[] METHOD_CHAIN_CONTINUATION_TOKENS = {
+      TokenTypes.METHOD_CALL,
+      TokenTypes.DOT,
+      TokenTypes.INDEX_OP,
+      TokenTypes.IDENT,
+  };
 
   private boolean allowUnwrappedFirstCall = false;
 
@@ -45,8 +52,35 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     MethodCallInfo methodCallInfo = analyzeTree(methodCall);
 
     if (methodCallInfo.violate()) {
-      log(methodCallInfo.getCaller(), WRAPPED_CHAIN_MSG_KEY);
+      logViolationDetails(methodCall);
     }
+  }
+
+  private void logViolationDetails(DetailAST methodCallAst) {
+    DetailAST chainPreviousCallPoint = getChainPreviousCallPointOrNull(methodCallAst);
+    DetailAST chainNextCallPoint = methodCallAst;
+    while (TokenUtil.isOfType(chainPreviousCallPoint, METHOD_CHAIN_CONTINUATION_TOKENS)) {
+      if (TokenUtil.isOfType(chainPreviousCallPoint, TokenTypes.METHOD_CALL)
+          || (!allowUnwrappedFirstCall && isCallChainBeginning(chainPreviousCallPoint))
+      ) {
+        if (areCallerAndCallOnTheSameLine(chainPreviousCallPoint, chainNextCallPoint)) {
+          logViolation(chainNextCallPoint.getFirstChild() == null ? chainNextCallPoint : chainNextCallPoint.getFirstChild());
+        }
+        chainNextCallPoint = chainPreviousCallPoint;
+      }
+      chainPreviousCallPoint = getChainPreviousCallPointOrNull(chainPreviousCallPoint);
+    }
+  }
+
+  private static boolean areCallerAndCallOnTheSameLine(DetailAST chainPreviousCallPoint, DetailAST chainNextCallPoint) {
+    return TokenUtil.areOnSameLine(
+        findCallerEndToken(chainPreviousCallPoint),
+        chainNextCallPoint
+    );
+  }
+
+  private void logViolation(DetailAST currentLineOuterMostMethodAst) {
+    log(currentLineOuterMostMethodAst, WRAPPED_CHAIN_MSG_KEY);
   }
 
   private boolean isMethodPartOfChain(DetailAST methodCall) {
@@ -79,6 +113,36 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
     return methodCallInfo;
   }
 
+  private static DetailAST getChainPreviousCallPointOrNull(DetailAST ast) {
+    DetailAST child = ast.getFirstChild();
+    while (child != null && !TokenUtil.isOfType(child, METHOD_CHAIN_CONTINUATION_TOKENS)) {
+      child = child.getFirstChild();
+    }
+    return child;
+  }
+
+  private static boolean isCallChainBeginning(DetailAST caller) {
+    return  (isCallingIdentifier(caller) && getChainPreviousCallPointOrNull(caller) == null || isObjectCreation(caller));
+  }
+
+  private static boolean isCallingIdentifier(DetailAST caller) {
+    return TokenUtil.isOfType(caller, TokenTypes.IDENT)
+        && TokenUtil.isOfType(caller.getParent(), TokenTypes.DOT);
+  }
+
+  private static boolean isObjectCreation(DetailAST child) {
+    return TokenUtil.isOfType(child.getParent(), TokenTypes.LITERAL_NEW);
+  }
+
+  private static DetailAST findCallerEndToken(DetailAST callPoint) {
+    switch (callPoint.getType()) {
+      case TokenTypes.METHOD_CALL:
+        return callPoint.findFirstToken(TokenTypes.RPAREN);
+      default:
+        return callPoint;
+    }
+  }
+
   private static class MethodCallInfo {
     private final boolean allowUnwrappedFirstCall;
     private int chainDepth;
@@ -105,10 +169,6 @@ public class WrapNewLinesMethodChainCallsCheck extends AbstractCheck {
         firstMethodLine = line;
         chainDepth++;
       }
-    }
-
-    public DetailAST getCaller() {
-      return caller;
     }
 
     public void setCaller(DetailAST caller) {

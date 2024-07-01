@@ -1,3 +1,9 @@
+-   name: 1.21.1
+    date: '2024-07-01T13:47:05.743837+03:00'
+    description: детализация нарушений чека chaincall
+    instructions: ''
+    compatible: true
+
 -   name: 1.21.0
     date: '2024-05-30T19:25:55.217649+03:00'
     description: add allowUnwrappedFirstCall property for module WrapNewLinesMethodChainCallsCheckTest;

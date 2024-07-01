@@ -59,7 +59,7 @@ public class WrapNewLinesMethodChainCallCheckTestInput {
         .stream()
         .collect(Collectors.toSet());
 
-    //expression with static method - NOT OK
+    //expression with static method - NOT OK but firstCall is OK depending on "allowUnwrappedFirstCall" property
     List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
         .stream().filter(myVeryLongNameForJustASimpleInteger -> myVeryLongNameForJustASimpleInteger % 2 == 0)
         .toList();
@@ -86,7 +86,7 @@ public class WrapNewLinesMethodChainCallCheckTestInput {
 
     // expression inside method call - OK
     myMethod(myAbsolutelyVeryLongNamedIntegerList.stream().collect(Collectors.toSet()), 100, 200);
-    // expression inside method call - NOT OK
+    // expression inside method call - NOT OK but firstCall is OK depending on "allowUnwrappedFirstCall" property
     myMethod(myAbsolutelyVeryLongNamedIntegerList.stream().map(theLongestIntNameEver -> theLongestIntNameEver + theLongestIntNameEver)
         .filter(theLongestIntNameEver -> theLongestIntNameEver == 1).collect(Collectors.toSet()), 100, 200);
     // expression inside method call - OK
@@ -115,7 +115,7 @@ public class WrapNewLinesMethodChainCallCheckTestInput {
     //do nothing
   }
 
-  // long lambdas - NOT OK
+  // long lambdas - NOT OK but firstCall in chain is OK depending on "allowUnwrappedFirstCall" property
   boolean myMethod1(int id) {
     return Optional.ofNullable(1).map(integer -> List.of(integer).stream().map(integer -> {
       return integer == 1 ? Boolean.TRUE : Boolean.FALSE;
@@ -181,7 +181,7 @@ public class WrapNewLinesMethodChainCallCheckTestInput {
         .collect(Collectors.toSet());
   }
 
-  // NOT OK
+  // NOT OK but firstCall in chain is OK depending on "allowUnwrappedFirstCall" property
   public Set<String> myMethod6() {
     List<Integer> list = List.of(1);
     return list.isEmpty() ? list.stream().filter(integer -> integer != 2).map(String::valueOf).map(String::strip)
